@@ -28,11 +28,13 @@ Set netObj = CreateObject("WScript.network")
 Set drives = netObj.EnumnetworkDrives
 
 For i = drives.Count - 1 To 0 Step -2
-  netObj.RemovenetworkDrive drives(i-1), True, True
   If InStr(1, drives(i), domain, vbTextCompare) > 0 Then
+    netObj.RemovenetworkDrive drives(i-1), True, True
     newpath = Replace(drives(i), oldserver & domain, newserver)
+    netObj.MapnetworkDrive drives(i-1), newpath, True
   Else
+    netObj.RemovenetworkDrive drives(i-1), True, True
     newpath = Replace(drives(i), oldserver, newserver)
+    netObj.MapnetworkDrive drives(i-1), newpath, True
   End If
-  netObj.MapnetworkDrive drives(i-1), newpath, True
 Next
